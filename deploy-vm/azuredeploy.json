@@ -78,8 +78,8 @@
         "publicIPAddressType" : "Dynamic",
         "nicName": "[concat(parameters('vmName'), '-networkInterface')]",
         "vnetID" : "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
-        "subNetRef" : "[concat(variables('vnetID'), '/subnets/', parameters('subNetName'))]",
-        "userImageName" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('userImageVhdName'), '.vhd')]",
+        "subNetID" : "[concat(variables('vnetID'), '/subnets/', parameters('subNetName'))]",
+        "userImageName" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('userImageVhdName'))]",
         "osDiskVhdName" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '.vhd')]"
     },
     "resources": [
@@ -101,9 +101,7 @@
             "name": "[variables('nicName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
-                "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
-                "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'), '/subnets/', parameters('subnetName'))]"
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
             ],
             "properties": {
             "ipConfigurations": [
@@ -115,7 +113,7 @@
                             "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
                         },
                         "subnet": {
-                            "id": "[variables('subNetRef')]"
+                            "id": "[variables('subNetID')]"
                         }
                     }
                 }
