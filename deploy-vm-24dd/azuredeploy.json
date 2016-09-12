@@ -1,0 +1,382 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters" : {
+        "userImageVhdName" : {
+            "type" : "string",
+            "metadata": {
+                "description": "Name of the custom VHD to deploy"
+            }
+        },
+        "userImageStorageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the storage account containing the vhd"
+            }
+        },
+        "userImageStorageContainerName" : {
+            "type" : "string",
+            "metadata": {
+                "description": "Name of the container in the storage account"
+            }
+        },
+        "vmName" : {
+            "type" : "string",
+            "metadata": {
+                "description": "Name for the virtual machine."
+            }
+        },
+        "virtualNetworkName" : {
+            "type" : "string",
+            "metadata": {
+                "description": "Name of an existing virtual network in which to deploy the virtual machine."
+            }
+        },
+        "subNetName" : {
+            "type" : "string",
+            "metadata": {
+                "description": "Name of an existing subnetwork in which to deploy the virtual machine."
+            }
+        },
+        "dnsNameForPublicIP" : {
+            "type" : "string",
+            "metadata": {
+                "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Password for the Virtual Machine"
+            }
+        },
+        "location" : {
+            "type" : "string",
+            "metadata": {
+                "description": "Location of the virtual machine."
+            }
+        },
+        "vmSize": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual machine size"
+            }
+        },
+        "osType" : {
+            "type" : "string",
+            "allowedValues" : [
+                "windows",
+                "linux"
+            ],
+            "metadata": {
+                "description": "OS that the virtual machine will be running"
+            }
+        }
+    },
+    "variables": {
+        "publicIPAddressName" : "[concat(parameters('vmName'), '-publicIP')]",
+        "publicIPAddressType" : "Dynamic",
+        "nicName": "[concat(parameters('vmName'), '-networkInterface')]",
+        "vnetID" : "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "subNetID" : "[concat(variables('vnetID'), '/subnets/', parameters('subNetName'))]",
+        "userImageName" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('userImageVhdName'))]",
+        "osDiskVhdName" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '.vhd')]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[variables('publicIPAddressName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
+                "dnsSettings": {
+                    "domainNameLabel": "[parameters('dnsNameForPublicIP')]"
+                }
+            }
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[variables('nicName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
+            ],
+            "properties": {
+            "ipConfigurations": [
+                {
+                    "name": "ipconfig1",
+                    "properties": {
+                        "privateIPAllocationMethod": "Dynamic",
+                        "publicIPAddress": {
+                            "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
+                        },
+                        "subnet": {
+                            "id": "[variables('subNetID')]"
+                        }
+                    }
+                }
+            ]
+            }
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('vmName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                    "computername": "[parameters('vmName')]",
+                    "adminUsername": "azureuser",
+                    "adminPassword": "[parameters('adminPassword')]"
+                },
+                "storageProfile": {
+                    "osDisk" : {
+                        "name" : "[concat(parameters('vmName'), '-osDisk')]",
+                        "osType" : "[parameters('osType')]",
+                        "caching" : "ReadWrite",
+						"createOption" : "FromImage",
+                        "image" : {
+                            "uri" : "[variables('userImageName')]"
+                        },
+                        "vhd" : {
+                            "uri" : "[variables('osDiskVhdName')]"
+                        }
+                    },
+					"dataDisks": [
+						{
+							"name": "datadisk01",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk01.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk02",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk02.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk03",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk03.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk04",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk04.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk05",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk05.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk06",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk06.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk07",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk07.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk08",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk08.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk09",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk09.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk10",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk10.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk11",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk11.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk12",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk12.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk13",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk13.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk14",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk14.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk15",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk15.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk16",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk16.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk17",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk17.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk18",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk18.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk19",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk19.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk20",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk20.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk21",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk21.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk22",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk22.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk23",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk23.vhd')]"
+							},
+							"createOption": "Empty"
+						},
+						{
+							"name": "datadisk24",
+							"diskSizeGB": "2",
+							"lun": 0,
+							"vhd": {
+								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk24.vhd')]"
+							},
+							"createOption": "Empty"
+						}
+					]
+                },
+                "networkProfile": {
+                    "networkInterfaces" : [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
