@@ -152,7 +152,7 @@
                     },
 					"dataDisks": [
 						{
-							"name": "datadisk01",
+							"name": "[concat(parameters('vmName'), '-dataDisk01')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -161,7 +161,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk02",
+							"name": "[concat(parameters('vmName'), '-dataDisk02')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -170,7 +170,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk03",
+							"name": "[concat(parameters('vmName'), '-dataDisk03')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -179,7 +179,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk04",
+							"name": "[concat(parameters('vmName'), '-dataDisk04')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -188,7 +188,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk05",
+							"name": "[concat(parameters('vmName'), '-dataDisk05')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -197,7 +197,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk06",
+							"name": "[concat(parameters('vmName'), '-dataDisk06')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -206,7 +206,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk07",
+							"name": "[concat(parameters('vmName'), '-dataDisk07')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -215,7 +215,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk08",
+							"name": "[concat(parameters('vmName'), '-dataDisk08')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -224,7 +224,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk09",
+							"name": "[concat(parameters('vmName'), '-dataDisk09')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -233,7 +233,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk10",
+							"name": "[concat(parameters('vmName'), '-dataDisk10')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -242,7 +242,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk11",
+							"name": "[concat(parameters('vmName'), '-dataDisk11')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -251,7 +251,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk12",
+							"name": "[concat(parameters('vmName'), '-dataDisk12')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -260,7 +260,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk13",
+							"name": "[concat(parameters('vmName'), '-dataDisk13')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -269,7 +269,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk14",
+							"name": "[concat(parameters('vmName'), '-dataDisk14')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -278,7 +278,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk15",
+							"name": "[concat(parameters('vmName'), '-dataDisk15')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -287,7 +287,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk16",
+							"name": "[concat(parameters('vmName'), '-dataDisk16')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -296,7 +296,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk17",
+							"name": "[concat(parameters('vmName'), '-dataDisk17')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -305,7 +305,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk18",
+							"name": "[concat(parameters('vmName'), '-dataDisk18')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -314,7 +314,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk19",
+							"name": "[concat(parameters('vmName'), '-dataDisk19')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -323,7 +323,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk20",
+							"name": "[concat(parameters('vmName'), '-dataDisk20')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -332,7 +332,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk21",
+							"name": "[concat(parameters('vmName'), '-dataDisk21')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -341,7 +341,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk22",
+							"name": "[concat(parameters('vmName'), '-dataDisk22')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -350,7 +350,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk23",
+							"name": "[concat(parameters('vmName'), '-dataDisk23')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
@@ -359,7 +359,7 @@
 							"createOption": "Empty"
 						},
 						{
-							"name": "datadisk24",
+							"name": "[concat(parameters('vmName'), '-dataDisk24')]",
 							"diskSizeGB": "2",
 							"lun": 0,
 							"vhd": {
