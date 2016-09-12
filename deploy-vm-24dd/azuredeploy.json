@@ -142,7 +142,7 @@
                         "name" : "[concat(parameters('vmName'), '-osDisk')]",
                         "osType" : "[parameters('osType')]",
                         "caching" : "ReadWrite",
-						"createOption" : "FromImage",
+                        "createOption" : "FromImage",
                         "image" : {
                             "uri" : "[variables('userImageName')]"
                         },
@@ -150,224 +150,224 @@
                             "uri" : "[variables('osDiskVhdName')]"
                         }
                     },
-					"dataDisks": [
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk01')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk01.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk02')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk02.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk03')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk03.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk04')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk04.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk05')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk05.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk06')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk06.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk07')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk07.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk08')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk08.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk09')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk09.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk10')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk10.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk11')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk11.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk12')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk12.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk13')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk13.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk14')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk14.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk15')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk15.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk16')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk16.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk17')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk17.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk18')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk18.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk19')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk19.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk20')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk20.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk21')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk21.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk22')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk22.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk23')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk23.vhd')]"
-							},
-							"createOption": "Empty"
-						},
-						{
-							"name": "[concat(parameters('vmName'), '-dataDisk24')]",
-							"diskSizeGB": "2",
-							"lun": 0,
-							"vhd": {
-								"uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk24.vhd')]"
-							},
-							"createOption": "Empty"
-						}
-					]
+                    "dataDisks": [
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk01')]",
+                            "diskSizeGB": "2",
+                            "lun": 1,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk01.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk02')]",
+                            "diskSizeGB": "2",
+                            "lun": 2,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk02.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk03')]",
+                            "diskSizeGB": "2",
+                            "lun": 3,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk03.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk04')]",
+                            "diskSizeGB": "2",
+                            "lun": 4,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk04.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk05')]",
+                            "diskSizeGB": "2",
+                            "lun": 5,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk05.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk06')]",
+                            "diskSizeGB": "2",
+                            "lun": 6,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk06.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk07')]",
+                            "diskSizeGB": "2",
+                            "lun": 7,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk07.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk08')]",
+                            "diskSizeGB": "2",
+                            "lun": 8,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk08.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk09')]",
+                            "diskSizeGB": "2",
+                            "lun": 9,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk09.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk10')]",
+                            "diskSizeGB": "2",
+                            "lun": 10,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk10.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk11')]",
+                            "diskSizeGB": "2",
+                            "lun": 11,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk11.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk12')]",
+                            "diskSizeGB": "2",
+                            "lun": 12,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk12.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk13')]",
+                            "diskSizeGB": "2",
+                            "lun": 13,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk13.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk14')]",
+                            "diskSizeGB": "2",
+                            "lun": 14,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk14.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk15')]",
+                            "diskSizeGB": "2",
+                            "lun": 15,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk15.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk16')]",
+                            "diskSizeGB": "2",
+                            "lun": 16,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk16.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk17')]",
+                            "diskSizeGB": "2",
+                            "lun": 17,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk17.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk18')]",
+                            "diskSizeGB": "2",
+                            "lun": 18,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk18.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk19')]",
+                            "diskSizeGB": "2",
+                            "lun": 19,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk19.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk20')]",
+                            "diskSizeGB": "2",
+                            "lun": 20,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk20.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk21')]",
+                            "diskSizeGB": "2",
+                            "lun": 21,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk21.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk22')]",
+                            "diskSizeGB": "2",
+                            "lun": 22,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk22.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk23')]",
+                            "diskSizeGB": "2",
+                            "lun": 23,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk23.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        },
+                        {
+                            "name": "[concat(parameters('vmName'), '-dataDisk24')]",
+                            "diskSizeGB": "2",
+                            "lun": 24,
+                            "vhd": {
+                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk24.vhd')]"
+                            },
+                            "createOption": "Empty"
+                        }
+                    ]
                 },
                 "networkProfile": {
                     "networkInterfaces" : [
