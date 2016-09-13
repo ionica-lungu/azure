@@ -71,7 +71,22 @@
             "metadata": {
                 "description": "OS that the virtual machine will be running"
             }
-        }
+        },
+		"numDataDisks" : {
+			"type" : "int",
+			"maxValue" : 64,
+			"defaultValue" : 0,
+			"metadata" : {
+				"description" : "Number of data disks"
+			}
+		},
+		"sizeOfDataDisksInGB" : {
+			"type" : "int",
+			"defaultValue" : 10,
+			"metadata" : {
+				"description" : "Size of data disks (in GB)"
+			}
+		}
     },
     "variables": {
         "publicIPAddressName" : "[concat(parameters('vmName'), '-publicIP')]",
@@ -80,7 +95,585 @@
         "vnetID" : "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
         "subNetID" : "[concat(variables('vnetID'), '/subnets/', parameters('subNetName'))]",
         "userImageName" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('userImageVhdName'))]",
-        "osDiskVhdName" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '.vhd')]"
+        "osDiskVhdName" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '.vhd')]",
+		"dataDisksArray" : [
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk00')]",
+				"lun" : 0,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk00.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk01')]",
+				"lun" : 1,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk01.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk02')]",
+				"lun" : 2,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk02.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk03')]",
+				"lun" : 3,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk03.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk04')]",
+				"lun" : 4,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk04.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk05')]",
+				"lun" : 5,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk05.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk06')]",
+				"lun" : 6,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk06.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk07')]",
+				"lun" : 7,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk07.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk08')]",
+				"lun" : 8,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk08.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk09')]",
+				"lun" : 9,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk09.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk10')]",
+				"lun" : 10,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk10.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk11')]",
+				"lun" : 11,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk11.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk12')]",
+				"lun" : 12,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk12.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk13')]",
+				"lun" : 13,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk13.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk14')]",
+				"lun" : 14,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk14.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk15')]",
+				"lun" : 15,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk15.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk16')]",
+				"lun" : 16,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk16.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk17')]",
+				"lun" : 17,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk17.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk18')]",
+				"lun" : 18,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk18.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk19')]",
+				"lun" : 19,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk19.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk20')]",
+				"lun" : 20,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk20.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk21')]",
+				"lun" : 21,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk21.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk22')]",
+				"lun" : 22,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk22.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk23')]",
+				"lun" : 23,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk23.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk24')]",
+				"lun" : 24,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk24.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk25')]",
+				"lun" : 25,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk25.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk26')]",
+				"lun" : 26,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk26.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk27')]",
+				"lun" : 27,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk27.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk28')]",
+				"lun" : 28,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk28.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk29')]",
+				"lun" : 29,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk29.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk30')]",
+				"lun" : 30,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk30.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk31')]",
+				"lun" : 31,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk31.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk32')]",
+				"lun" : 32,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk32.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk33')]",
+				"lun" : 33,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk33.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk34')]",
+				"lun" : 34,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk34.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk35')]",
+				"lun" : 35,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk35.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk36')]",
+				"lun" : 36,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk36.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk37')]",
+				"lun" : 37,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk37.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk38')]",
+				"lun" : 38,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk38.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk39')]",
+				"lun" : 39,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk39.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk40')]",
+				"lun" : 40,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk40.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk41')]",
+				"lun" : 41,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk41.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk42')]",
+				"lun" : 42,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk42.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk43')]",
+				"lun" : 43,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk43.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk44')]",
+				"lun" : 44,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk44.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk45')]",
+				"lun" : 45,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk45.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk46')]",
+				"lun" : 46,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk46.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk47')]",
+				"lun" : 47,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk47.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk48')]",
+				"lun" : 48,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk48.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk49')]",
+				"lun" : 49,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk49.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk50')]",
+				"lun" : 50,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk50.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk51')]",
+				"lun" : 51,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk51.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk52')]",
+				"lun" : 52,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk52.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk53')]",
+				"lun" : 53,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk53.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk54')]",
+				"lun" : 54,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk54.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk55')]",
+				"lun" : 55,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk55.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk56')]",
+				"lun" : 56,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk56.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk57')]",
+				"lun" : 57,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk57.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk58')]",
+				"lun" : 58,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk58.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk59')]",
+				"lun" : 59,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk59.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk60')]",
+				"lun" : 60,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk60.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk61')]",
+				"lun" : 61,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk61.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk62')]",
+				"lun" : 62,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk62.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			},
+			{
+				"name" : "[concat(parameters('vmName'), '-dataDisk63')]",
+				"lun" : 63,
+				"vhd" : {
+					"uri" : "[concat('http://', parameters('userImageStorageAccountName'), '.blob.core.windows.net/', parameters('userImageStorageContainerName'), '/', parameters('vmName'), '-dataDisk63.vhd')]"
+				},
+				"createOption" : "Empty",
+				"diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+			}
+		]
     },
     "resources": [
         {
@@ -150,224 +743,7 @@
                             "uri" : "[variables('osDiskVhdName')]"
                         }
                     },
-                    "dataDisks": [
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk01')]",
-                            "diskSizeGB": "2",
-                            "lun": 1,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk01.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk02')]",
-                            "diskSizeGB": "2",
-                            "lun": 2,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk02.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk03')]",
-                            "diskSizeGB": "2",
-                            "lun": 3,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk03.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk04')]",
-                            "diskSizeGB": "2",
-                            "lun": 4,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk04.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk05')]",
-                            "diskSizeGB": "2",
-                            "lun": 5,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk05.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk06')]",
-                            "diskSizeGB": "2",
-                            "lun": 6,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk06.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk07')]",
-                            "diskSizeGB": "2",
-                            "lun": 7,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk07.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk08')]",
-                            "diskSizeGB": "2",
-                            "lun": 8,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk08.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk09')]",
-                            "diskSizeGB": "2",
-                            "lun": 9,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk09.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk10')]",
-                            "diskSizeGB": "2",
-                            "lun": 10,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk10.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk11')]",
-                            "diskSizeGB": "2",
-                            "lun": 11,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk11.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk12')]",
-                            "diskSizeGB": "2",
-                            "lun": 12,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk12.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk13')]",
-                            "diskSizeGB": "2",
-                            "lun": 13,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk13.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk14')]",
-                            "diskSizeGB": "2",
-                            "lun": 14,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk14.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk15')]",
-                            "diskSizeGB": "2",
-                            "lun": 15,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk15.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk16')]",
-                            "diskSizeGB": "2",
-                            "lun": 16,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk16.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk17')]",
-                            "diskSizeGB": "2",
-                            "lun": 17,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk17.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk18')]",
-                            "diskSizeGB": "2",
-                            "lun": 18,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk18.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk19')]",
-                            "diskSizeGB": "2",
-                            "lun": 19,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk19.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk20')]",
-                            "diskSizeGB": "2",
-                            "lun": 20,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk20.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk21')]",
-                            "diskSizeGB": "2",
-                            "lun": 21,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk21.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk22')]",
-                            "diskSizeGB": "2",
-                            "lun": 22,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk22.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk23')]",
-                            "diskSizeGB": "2",
-                            "lun": 23,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk23.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        },
-                        {
-                            "name": "[concat(parameters('vmName'), '-dataDisk24')]",
-                            "diskSizeGB": "2",
-                            "lun": 24,
-                            "vhd": {
-                                "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk24.vhd')]"
-                            },
-                            "createOption": "Empty"
-                        }
-                    ]
+                    "dataDisks": "[take(variables('dataDisksArray'), parameters('numDataDisks'))]"
                 },
                 "networkProfile": {
                     "networkInterfaces" : [
