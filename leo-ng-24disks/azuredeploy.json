@@ -210,7 +210,7 @@
                 "dataDisks": [
                     {
                         "name": "datadisk1",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 0,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk1.vhd')]"
@@ -219,7 +219,7 @@
                     },
                     {
                         "name": "datadisk2",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 1,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk2.vhd')]"
@@ -228,7 +228,7 @@
                     },
                     {
                         "name": "datadisk3",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 2,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk3.vhd')]"
@@ -237,7 +237,7 @@
                     },
                     {
                         "name": "datadisk4",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 3,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk4.vhd')]"
@@ -246,7 +246,7 @@
                     },
                     {
                         "name": "datadisk5",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 4,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk5.vhd')]"
@@ -255,7 +255,7 @@
                     },
                     {
                         "name": "datadisk6",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 5,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk6.vhd')]"
@@ -264,7 +264,7 @@
                     },
                     {
                         "name": "datadisk7",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 6,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk7.vhd')]"
@@ -273,7 +273,7 @@
                     },
                     {
                         "name": "datadisk8",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 7,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk8.vhd')]"
@@ -282,7 +282,7 @@
                     },
                     {
                         "name": "datadisk9",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 8,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk9.vhd')]"
@@ -291,7 +291,7 @@
                     },
                     {
                         "name": "datadisk10",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 9,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk10.vhd')]"
@@ -300,7 +300,7 @@
                     },
                     {
                         "name": "datadisk11",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 10,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk11.vhd')]"
@@ -309,7 +309,7 @@
                     },
                     {
                         "name": "datadisk12",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 11,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk12.vhd')]"
@@ -318,7 +318,7 @@
                     },
                     {
                         "name": "datadisk13",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 12,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk13.vhd')]"
@@ -327,7 +327,7 @@
                     },
                     {
                         "name": "datadisk14",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 13,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk14.vhd')]"
@@ -336,7 +336,7 @@
                     },
                     {
                         "name": "datadisk15",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 14,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk15.vhd')]"
@@ -345,7 +345,7 @@
                     },
                     {
                         "name": "datadisk16",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 15,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk16.vhd')]"
@@ -354,7 +354,7 @@
                     },
                     {
                         "name": "datadisk17",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 16,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk17.vhd')]"
@@ -363,7 +363,7 @@
                     },
                     {
                         "name": "datadisk18",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 17,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk18.vhd')]"
@@ -372,7 +372,7 @@
                     },
                     {
                         "name": "datadisk19",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 18,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk19.vhd')]"
@@ -381,7 +381,7 @@
                     },
                     {
                         "name": "datadisk20",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 19,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk20.vhd')]"
@@ -390,7 +390,7 @@
                     },
                     {
                         "name": "datadisk21",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 20,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk21.vhd')]"
@@ -399,7 +399,7 @@
                     },
                     {
                         "name": "datadisk22",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 21,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk22.vhd')]"
@@ -408,7 +408,7 @@
                     },
                     {
                         "name": "datadisk23",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 22,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk23.vhd')]"
@@ -417,7 +417,7 @@
                     },
                     {
                         "name": "datadisk24",
-                        "diskSizeGB": "10",
+                        "diskSizeGB": "75",
                         "lun": 23,
                         "vhd": {
 						    "uri" : "[concat(variables('osDiskVhdName'),'-vm','.datadisk24.vhd')]"
