@@ -10,14 +10,14 @@
         },
         "storageAccountName": {
             "type": "string",
-			"defaultValue" : "ialrmstor00",
+            "defaultValue" : "ialrmstor00",
             "metadata": {
                 "description": "Name of the storage account that will hold the newly created resources"
             }
         },
         "storageContainerName" : {
             "type" : "string",
-			"defaultValue" : "vhds",
+            "defaultValue" : "vhds",
             "metadata": {
                 "description": "Name of the container in the storage account"
             }
@@ -30,7 +30,7 @@
         },
         "virtualNetName" : {
             "type" : "string",
-			"defaultValue" : "ial-rm-net-00",
+            "defaultValue" : "ial-rm-net-00",
             "metadata": {
                 "description": "Name of the virtual network in which to deploy the virtual machine."
             }
@@ -44,7 +44,7 @@
         },
         "subNetName" : {
             "type" : "string",
-			"defaultValue" : "ial-rm-subnet-00",
+            "defaultValue" : "ial-rm-subnet-00",
             "metadata": {
                 "description": "Name of the subnetwork in which to deploy the virtual machine."
             }
@@ -70,14 +70,14 @@
         },
         "location" : {
             "type" : "string",
-			"defaultValue" : "West Europe",
+            "defaultValue" : "West Europe",
             "metadata": {
                 "description": "Location of the virtual machine."
             }
         },
         "vmSize": {
             "type": "string",
-			"defaultValue" : "Standard_A1",
+            "defaultValue" : "Standard_A1",
             "metadata": {
                 "description": "Virtual machine size"
             }
@@ -88,7 +88,7 @@
                 "windows",
                 "linux"
             ],
-			"defaultValue" : "linux",
+            "defaultValue" : "linux",
             "metadata": {
                 "description": "OS that the virtual machine will be running"
             }
@@ -757,12 +757,22 @@
             }
         },
         {
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[parameters('storageAccountName')]",
+            "apiVersion": "2015-06-15",
+            "location": "[parameters('location')]",
+            "properties": {
+                "accountType": "Standard_LRS"
+            }
+        },
+        {
             "apiVersion": "2015-06-15",
             "type": "Microsoft.Compute/virtualMachines",
             "name": "[parameters('vmName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+                "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]"
             ],
             "properties": {
                 "hardwareProfile": {
