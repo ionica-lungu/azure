@@ -32,26 +32,26 @@
                 "description": "Name of the virtual network in which to deploy the virtual machine."
             }
         },
-		"virtualNetPrefix": {
-			"type": "string",
-			"defaultValue": "10.0.0.0/16",
-			"metadata": {
-				"description": "Virtual network address prefix in CIDR format"
-			}
-		},
+        "virtualNetPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+                "description": "Virtual network address prefix in CIDR format"
+            }
+        },
         "subNetName" : {
             "type" : "string",
             "metadata": {
                 "description": "Name of the subnetwork in which to deploy the virtual machine."
             }
         },
-		"subNetPrefix": {
-			"type": "string",
-			"defaultValue": "10.0.0.0/24",
-			"metadata": {
-				"description": "Subnetwork address prefix in CIDR format"
-			}
-		},
+        "subNetPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/24",
+            "metadata": {
+                "description": "Subnetwork address prefix in CIDR format"
+            }
+        },
         "dnsNameForPublicIP" : {
             "type" : "string",
             "metadata": {
@@ -729,7 +729,7 @@
             "name": "[variables('nicName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-				"[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetName'))]",
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetName'))]",
                 "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
             ],
             "properties": {
