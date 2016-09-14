@@ -10,7 +10,7 @@
         },
         "storageAccountName": {
             "type": "string",
-            "defaultValue" : "ialrmstor00",
+            "defaultValue" : "ialrmstorwe0",
             "metadata": {
                 "description": "Name of the storage account that will hold the newly created resources"
             }
@@ -757,9 +757,9 @@
             }
         },
         {
+            "apiVersion": "2015-06-15",
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[parameters('storageAccountName')]",
-            "apiVersion": "2015-06-15",
             "location": "[parameters('location')]",
             "properties": {
                 "accountType": "Standard_LRS"
