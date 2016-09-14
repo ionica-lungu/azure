@@ -6,7 +6,7 @@
     "fwVmSize": { "type": "string" },
     "fwVmRootPasswd": { "type": "string" },
     "publicIpRef": { "type": "string" },
-    "imageSku": { "type": "string" },
+    "imageUri": { "type": "string" },
     "haSetName": { "type": "string" },
     "fwVmAddress1": { "type": "string" },
     "fwVmAddress2": { "type": "string" },
@@ -14,7 +14,7 @@
     "fwSubnetAddress": { "type": "string" },
     "fwSubnetDefaultGw": { "type": "string" },
     "lbName": { "type": "string" },
-    "newStorageAccountName": { "type": "string" },
+    "vmStorageAccountName": { "type": "string" },
     "location": { "type": "string" }
   },
   "variables": {
@@ -245,11 +245,6 @@
         "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
         "[resourceId('Microsoft.Compute/availabilitySets/', parameters('haSetName'))]"
       ],
-      "plan": {
-        "name": "[parameters('imageSku')]",
-        "Product": "[variables('imageOffer')]",
-        "Publisher": "[variables('imagePublisher')]"
-      },
       "properties": {
         "availabilitySet": {
           "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('haSetName'))]"
@@ -264,18 +259,15 @@
           "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"flags\" : [\"primary\"], \"ip\" : \"', parameters('fwVmAddress1'), '\", \"haip\" : \"', parameters('fwVmAddress2'), '\", \"subnet\" : \"', parameters('fwSubnetAddress'), '\", \"gateway\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('fwVmRootPasswd'), '\" }}'))]"
         },
         "storageProfile": {
-          "imageReference": {
-            "publisher": "[variables('imagePublisher')]",
-            "offer": "[variables('imageOffer')]",
-            "sku": "[parameters('imageSku')]",
-            "version": "latest"
-          },
           "osDisk": {
             "name": "[concat(parameters('fwVmName'),'-osDisk')]",
             "caching": "ReadWrite",
             "createOption": "FromImage",
+            "image" : {
+                "uri" : "[parameters('imageUri')]"
+            },
             "vhd": {
-              "uri": "[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',parameters('fwVmName'),'.vhd')]"
+              "uri": "[concat('https://',parameters('vmStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',parameters('fwVmName'),'.vhd')]"
             }
           }
         },
@@ -301,11 +293,6 @@
       "dependsOn": [
         "[resourceId( 'Microsoft.Network/networkInterfaces', concat( variables( 'nicName' ), 'HA'))]"
       ],
-      "plan": {
-        "name": "[parameters('imageSku')]",
-        "Product": "[variables('imageOffer')]",
-        "Publisher": "[variables('imagePublisher')]"
-      },
       "properties": {
         "availabilitySet": {
           "id": "[resourceId('Microsoft.Compute/availabilitySets',parameters('haSetName'))]"
@@ -320,18 +307,15 @@
           "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"haip\" : \"', parameters('fwVmAddress2'), '\", \"subnet\" : \"', parameters('fwSubnetAddress'), '\", \"gateway\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('fwVmRootPasswd'), '\" }}'))]"
         },
         "storageProfile": {
-          "imageReference": {
-            "publisher": "[variables('imagePublisher')]",
-            "offer": "[variables('imageOffer')]",
-            "sku": "[parameters('imageSku')]",
-            "version": "latest"
-          },
           "osDisk": {
             "name": "[concat(parameters('fwVmName'),'-osDisk')]",
             "caching": "ReadWrite",
             "createOption": "FromImage",
+            "image" : {
+                "uri" : "[parameters('imageUri')]"
+            },
             "vhd": {
-              "uri": "[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',parameters('fwVmName'),'ha','.vhd')]"
+              "uri": "[concat('https://',parameters('vmStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',parameters('fwVmName'),'ha','.vhd')]"
             }
           }
         },
