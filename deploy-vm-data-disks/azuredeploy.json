@@ -10,12 +10,14 @@
         },
         "storageAccountName": {
             "type": "string",
+			"defaultValue" : "ialrmstor00",
             "metadata": {
                 "description": "Name of the storage account that will hold the newly created resources"
             }
         },
         "storageContainerName" : {
             "type" : "string",
+			"defaultValue" : "vhds",
             "metadata": {
                 "description": "Name of the container in the storage account"
             }
@@ -28,6 +30,7 @@
         },
         "virtualNetName" : {
             "type" : "string",
+			"defaultValue" : "ial-rm-net-00",
             "metadata": {
                 "description": "Name of the virtual network in which to deploy the virtual machine."
             }
@@ -41,6 +44,7 @@
         },
         "subNetName" : {
             "type" : "string",
+			"defaultValue" : "ial-rm-subnet-00",
             "metadata": {
                 "description": "Name of the subnetwork in which to deploy the virtual machine."
             }
@@ -66,12 +70,14 @@
         },
         "location" : {
             "type" : "string",
+			"defaultValue" : "West Europe",
             "metadata": {
                 "description": "Location of the virtual machine."
             }
         },
         "vmSize": {
             "type": "string",
+			"defaultValue" : "Standard_A1",
             "metadata": {
                 "description": "Virtual machine size"
             }
@@ -82,6 +88,7 @@
                 "windows",
                 "linux"
             ],
+			"defaultValue" : "linux",
             "metadata": {
                 "description": "OS that the virtual machine will be running"
             }
@@ -108,7 +115,7 @@
         "nicName": "[concat(parameters('vmName'), '-networkInterface')]",
         "vnetID" : "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetName'))]",
         "subNetID" : "[concat(variables('vnetID'), '/subnets/', parameters('subNetName'))]",
-        "storageContainerUri" : "[concat(variables('storageContainerUri'))]",
+        "storageContainerUri" : "[concat('http://', parameters('storageAccountName'), '.blob.core.windows.net/', parameters('storageContainerName'))]",
         "osDiskVhdName" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-osDisk.vhd')]",
         "dataDisksArray" : [
             {
