@@ -870,7 +870,7 @@
                             "uri" : "[parameters('userImageVhdUri')]"
                         },
                         "vhd" : {
-                            "uri" : "[concat(variables('osDiskVhdName'), '-ha')]"
+                            "uri" : "[concat(variables('osDiskVhdName'), '-ha.vhd')]"
                         }
                     }
                 },
