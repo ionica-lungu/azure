@@ -781,6 +781,11 @@
                     },
                     "dataDisks": "[take(variables('dataDisksArray'), parameters('numDataDisks'))]"
                 },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": false
+                    }
+                },
                 "networkProfile": {
                     "networkInterfaces" : [
                         {
