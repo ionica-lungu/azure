@@ -788,7 +788,7 @@
                     "name": "ipconfig1-ha",
                     "properties": {
                         "privateIPAllocationMethod": "Static",
-                        "privateIPAddress": "[parameters('fwVmAddress1')]",
+                        "privateIPAddress": "[parameters('fwVmAddress2')]",
                         "publicIPAddress": {
                             "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('publicIPAddressName'), '-ha'))]"
                         },
