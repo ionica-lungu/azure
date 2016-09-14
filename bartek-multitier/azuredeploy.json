@@ -1,339 +1,887 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "fwVmName": { "type": "string" },
-    "fwVmSize": { "type": "string" },
-    "fwVmRootPasswd": { "type": "string" },
-    "publicIpRef": { "type": "string" },
-    "imageUri": { "type": "string" },
-    "haSetName": { "type": "string" },
-    "fwVmAddress1": { "type": "string" },
-    "fwVmAddress2": { "type": "string" },
-    "fwSubnetRef": { "type": "string" },
-    "fwSubnetAddress": { "type": "string" },
-    "fwSubnetDefaultGw": { "type": "string" },
-    "lbName": { "type": "string" },
-    "vmStorageAccountName": { "type": "string" },
-    "location": { "type": "string" }
-  },
-  "variables": {
-    "apiVersion": "2015-06-15",
-    "networkApiVersion": "2016-07-01",
-    "nicName": "[concat( parameters( 'fwVmName' ), 'Nic' )]",
-    "lbId": "[resourceId('Microsoft.Network/loadBalancers',parameters( 'lbName' ))]",
-    "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEnd')]",
-    "lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/BackendPool1')]",
-    "lbSSLProbeID": "[concat(variables('lbID'),'/probes/tcpSSLProbe')]",
-    "lbVPNProbeID": "[concat(variables('lbID'),'/probes/tcpVPNProbe')]",
-    "imagePublisher": "barracudanetworks",
-    "imageOffer": "barracuda-ng-firewall",
-    "adminUsername": "will-be-replaced-by-root",
-    "vmStorageAccountContainerName": "vhds"
-  },
-  "resources": [
-    {
-      "apiVersion": "[variables( 'apiVersion' )]",
-      "type": "Microsoft.Compute/availabilitySets",
-      "name": "[parameters('haSetName')]",
-      "location": "[parameters('location')]",
-      "properties": { }
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters" : {
+        "userImageVhdUri" : {
+            "type" : "string",
+            "metadata": {
+                "description": "URL of the VHD image to deploy"
+            }
+        },
+        "storageAccountName": {
+            "type": "string",
+            "defaultValue" : "ialrmstorwe0",
+            "metadata": {
+                "description": "Name of the storage account that will hold the newly created resources"
+            }
+        },
+        "storageContainerName" : {
+            "type" : "string",
+            "defaultValue" : "vhds",
+            "metadata": {
+                "description": "Name of the container in the storage account"
+            }
+        },
+        "vmName" : {
+            "type" : "string",
+            "metadata": {
+                "description": "Name for the virtual machine."
+            }
+        },
+        "virtualNetName" : {
+            "type" : "string",
+            "defaultValue" : "ial-rm-net-00",
+            "metadata": {
+                "description": "Name of the virtual network in which to deploy the virtual machine."
+            }
+        },
+        "virtualNetPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+                "description": "Virtual network address prefix in CIDR format"
+            }
+        },
+        "subNetName" : {
+            "type" : "string",
+            "defaultValue" : "ial-rm-subnet-00",
+            "metadata": {
+                "description": "Name of the subnetwork in which to deploy the virtual machine."
+            }
+        },
+        "subNetPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/24",
+            "metadata": {
+                "description": "Subnetwork address prefix in CIDR format"
+            }
+        },
+        "dnsNameForPublicIP" : {
+            "type" : "string",
+            "metadata": {
+                "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Password for the Virtual Machine"
+            }
+        },
+        "location" : {
+            "type" : "string",
+            "defaultValue" : "West Europe",
+            "metadata": {
+                "description": "Location of the virtual machine."
+            }
+        },
+        "vmSize": {
+            "type": "string",
+            "defaultValue" : "Standard_A1",
+            "metadata": {
+                "description": "Virtual machine size"
+            }
+        },
+        "osType" : {
+            "type" : "string",
+            "allowedValues" : [
+                "windows",
+                "linux"
+            ],
+            "defaultValue" : "linux",
+            "metadata": {
+                "description": "OS that the virtual machine will be running"
+            }
+        },
+        "numDataDisks" : {
+            "type" : "int",
+            "maxValue" : 64,
+            "defaultValue" : 0,
+            "metadata" : {
+                "description" : "Number of data disks"
+            }
+        },
+        "sizeOfDataDisksInGB" : {
+            "type" : "int",
+            "defaultValue" : 10,
+            "metadata" : {
+                "description" : "Size of data disks (in GB)"
+            }
+        },
+        "fwVmAddress1": { "type": "string" },
+        "fwVmAddress2": { "type": "string" },
+        "fwSubnetDefaultGw": { "type": "string" }
     },
-    {
-      "apiVersion": "[variables( 'networkApiVersion' )]",
-      "type": "Microsoft.Network/networkInterfaces",
-      "name": "[variables('nicName')]",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Network/loadBalancers/', parameters('lbName'))]"
-      ],
-      "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "[parameters('fwVmAddress1')]",
-              "subnet": {
-                "id": "[parameters( 'fwSubnetRef' )]"
-              },
-              "loadBalancerBackendAddressPools": [
-                {
-                  "id": "[concat(variables('lbID'), '/backendAddressPools/BackendPool1')]"
-                }
-              ],
-              "loadBalancerInboundNatRules": [
-                {
-                  "id": "[concat(variables('lbID'),'/inboundNatRules/SSH-VM')]"
+    "variables": {
+        "publicIPAddressName" : "[concat(parameters('vmName'), '-publicIP')]",
+        "publicIPAddressType" : "Dynamic",
+        "nicName": "[concat(parameters('vmName'), '-networkInterface')]",
+        "vnetID" : "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetName'))]",
+        "subNetID" : "[concat(variables('vnetID'), '/subnets/', parameters('subNetName'))]",
+        "storageContainerUri" : "[concat('http://', parameters('storageAccountName'), '.blob.core.windows.net/', parameters('storageContainerName'))]",
+        "osDiskVhdName" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-osDisk.vhd')]",
+        "dataDisksArray" : [
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk00')]",
+                "lun" : 0,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk00.vhd')]"
                 },
-                {
-                  "id": "[concat(variables('lbID'),'/inboundNatRules/MGMT-VM')]"
-                }
-              ]
-
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk01')]",
+                "lun" : 1,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk01.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk02')]",
+                "lun" : 2,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk02.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk03')]",
+                "lun" : 3,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk03.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk04')]",
+                "lun" : 4,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk04.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk05')]",
+                "lun" : 5,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk05.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk06')]",
+                "lun" : 6,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk06.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk07')]",
+                "lun" : 7,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk07.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk08')]",
+                "lun" : 8,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk08.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk09')]",
+                "lun" : 9,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk09.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk10')]",
+                "lun" : 10,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk10.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk11')]",
+                "lun" : 11,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk11.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk12')]",
+                "lun" : 12,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk12.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk13')]",
+                "lun" : 13,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk13.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk14')]",
+                "lun" : 14,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk14.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk15')]",
+                "lun" : 15,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk15.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk16')]",
+                "lun" : 16,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk16.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk17')]",
+                "lun" : 17,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk17.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk18')]",
+                "lun" : 18,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk18.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk19')]",
+                "lun" : 19,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk19.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk20')]",
+                "lun" : 20,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk20.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk21')]",
+                "lun" : 21,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk21.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk22')]",
+                "lun" : 22,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk22.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk23')]",
+                "lun" : 23,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk23.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk24')]",
+                "lun" : 24,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk24.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk25')]",
+                "lun" : 25,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk25.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk26')]",
+                "lun" : 26,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk26.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk27')]",
+                "lun" : 27,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk27.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk28')]",
+                "lun" : 28,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk28.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk29')]",
+                "lun" : 29,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk29.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk30')]",
+                "lun" : 30,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk30.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk31')]",
+                "lun" : 31,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk31.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk32')]",
+                "lun" : 32,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk32.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk33')]",
+                "lun" : 33,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk33.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk34')]",
+                "lun" : 34,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk34.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk35')]",
+                "lun" : 35,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk35.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk36')]",
+                "lun" : 36,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk36.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk37')]",
+                "lun" : 37,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk37.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk38')]",
+                "lun" : 38,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk38.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk39')]",
+                "lun" : 39,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk39.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk40')]",
+                "lun" : 40,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk40.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk41')]",
+                "lun" : 41,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk41.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk42')]",
+                "lun" : 42,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk42.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk43')]",
+                "lun" : 43,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk43.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk44')]",
+                "lun" : 44,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk44.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk45')]",
+                "lun" : 45,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk45.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk46')]",
+                "lun" : 46,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk46.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk47')]",
+                "lun" : 47,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk47.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk48')]",
+                "lun" : 48,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk48.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk49')]",
+                "lun" : 49,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk49.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk50')]",
+                "lun" : 50,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk50.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk51')]",
+                "lun" : 51,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk51.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk52')]",
+                "lun" : 52,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk52.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk53')]",
+                "lun" : 53,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk53.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk54')]",
+                "lun" : 54,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk54.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk55')]",
+                "lun" : 55,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk55.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk56')]",
+                "lun" : 56,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk56.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk57')]",
+                "lun" : 57,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk57.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk58')]",
+                "lun" : 58,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk58.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk59')]",
+                "lun" : 59,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk59.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk60')]",
+                "lun" : 60,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk60.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk61')]",
+                "lun" : 61,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk61.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk62')]",
+                "lun" : 62,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk62.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
+            },
+            {
+                "name" : "[concat(parameters('vmName'), '-dataDisk63')]",
+                "lun" : 63,
+                "vhd" : {
+                    "uri" : "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-dataDisk63.vhd')]"
+                },
+                "createOption" : "Empty",
+                "diskSizeGB": "[parameters('sizeOfDataDisksInGB')]"
             }
-          }
-        ],
-        "enableIPForwarding": true
-      }
-    },
-    {
-      "apiVersion": "[variables( 'networkApiVersion' )]",
-      "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(variables('nicName'),'HA')]",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Network/loadBalancers/', parameters('lbName'))]"
-      ],
-      "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig2",
-            "properties": {
-              "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "[parameters('fwVmAddress2')]",
-              "subnet": {
-                "id": "[parameters( 'fwSubnetRef' )]"
-              },
-              "loadBalancerBackendAddressPools": [
-                {
-                  "id": "[concat(variables('lbID'), '/backendAddressPools/BackendPool1')]"
-                }
-              ],
-              "loadBalancerInboundNatRules": [ ]
-            }
-          }
-        ],
-        "enableIPForwarding": true
-      }
-    },
-    {
-      "apiVersion": "[variables( 'apiVersion' )]",
-      "type": "Microsoft.Network/loadBalancers",
-      "name": "[parameters('lbName')]",
-      "location": "[parameters('location')]",
-      "dependsOn": [ ],
-      "properties": {
-        "frontendIPConfigurations": [
-          {
-            "name": "LoadBalancerFrontEnd",
-            "properties": {
-              "publicIPAddress": {
-                "id": "[parameters( 'publicIpRef' )]"
-              }
-            }
-          }
-        ],
-        "backendAddressPools": [
-          {
-            "name": "BackendPool1"
-          }
-        ],
-        "inboundNatRules": [
-          {
-            "name": "SSH-VM",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('frontEndIPConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 22,
-              "backendPort": 22,
-              "enableFloatingIP": false
-            }
-          },
-          {
-            "name": "MGMT-VM",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('frontEndIPConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 807,
-              "backendPort": 807,
-              "enableFloatingIP": false
-            }
-          }
-        ],
-        "loadBalancingRules": [
-          {
-            "name": "LBRuleSSL",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('frontEndIPConfigID')]"
-              },
-              "backendAddressPool": {
-                "id": "[variables('lbPoolID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 443,
-              "backendPort": 443,
-              "enableFloatingIP": false,
-              "idleTimeoutInMinutes": 5,
-              "probe": {
-                "id": "[variables('lbSSLProbeID')]"
-              }
-            }
-          },
-          {
-            "name": "LBRuleVPN",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('frontEndIPConfigID')]"
-              },
-              "backendAddressPool": {
-                "id": "[variables('lbPoolID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 691,
-              "backendPort": 691,
-              "enableFloatingIP": false,
-              "idleTimeoutInMinutes": 5,
-              "probe": {
-                "id": "[variables('lbVPNProbeID')]"
-              }
-            }
-          },
-          {
-            "name": "LBRuleVPNUDP",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('frontEndIPConfigID')]"
-              },
-              "backendAddressPool": {
-                "id": "[variables('lbPoolID')]"
-              },
-              "protocol": "udp",
-              "frontendPort": 691,
-              "backendPort": 691,
-              "enableFloatingIP": false,
-              "idleTimeoutInMinutes": 5,
-              "probe": {
-                "id": "[variables('lbVPNProbeID')]"
-              }
-            }
-          }
-        ],
-        "probes": [
-          {
-            "name": "tcpSSLProbe",
-            "properties": {
-              "protocol": "tcp",
-              "port": 443,
-              "intervalinseconds": "5",
-              "numberofprobes": "2"
-            }
-          },
-          {
-            "name": "tcpVPNProbe",
-            "properties": {
-              "protocol": "tcp",
-              "port": 691,
-              "intervalinseconds": "5",
-              "numberofprobes": "2"
-            }
-          }
         ]
-      }
     },
-    {
-      "apiVersion": "[variables( 'apiVersion' )]",
-      "type": "Microsoft.Compute/virtualMachines",
-      "name": "[parameters('fwVmName')]",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
-        "[resourceId('Microsoft.Compute/availabilitySets/', parameters('haSetName'))]"
-      ],
-      "properties": {
-        "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('haSetName'))]"
-        },
-        "hardwareProfile": {
-          "vmSize": "[parameters('fwVmSize')]"
-        },
-        "osProfile": {
-          "computerName": "[parameters('fwVmName')]",
-          "adminUsername": "[variables('adminUsername')]",
-          "adminPassword": "[parameters('fwVmRootPasswd')]",
-          "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"flags\" : [\"primary\"], \"ip\" : \"', parameters('fwVmAddress1'), '\", \"haip\" : \"', parameters('fwVmAddress2'), '\", \"subnet\" : \"', parameters('fwSubnetAddress'), '\", \"gateway\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('fwVmRootPasswd'), '\" }}'))]"
-        },
-        "storageProfile": {
-          "osDisk": {
-            "name": "[concat(parameters('fwVmName'),'-osDisk')]",
-            "caching": "ReadWrite",
-            "createOption": "FromImage",
-            "image" : {
-                "uri" : "[parameters('imageUri')]"
+    "resources": [
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[parameters('virtualNetName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+            "addressSpace": {
+                "addressPrefixes": [
+                "[parameters('virtualNetPrefix')]"
+                ]
             },
-            "vhd": {
-              "uri": "[concat('https://',parameters('vmStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',parameters('fwVmName'),'.vhd')]"
+            "subnets": [
+                {
+                "name": "[parameters('subNetName')]",
+                "properties" : {
+                    "addressPrefix": "[parameters('subNetPrefix')]"
+                }
+                }
+            ]
             }
-          }
         },
-        "diagnosticsProfile": {
-          "bootDiagnostics": {
-            "enabled": false
-          }
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[variables('publicIPAddressName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
+                "dnsSettings": {
+                    "domainNameLabel": "[parameters('dnsNameForPublicIP')]"
+                }
             }
-          ]
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[concat(variables('publicIPAddressName'), '-ha')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
+                "dnsSettings": {
+                    "domainNameLabel": "[concat(parameters('dnsNameForPublicIP'), '-ha')]"
+                }
+            }
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[variables('nicName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetName'))]",
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
+            ],
+            "properties": {
+            "ipConfigurations": [
+                {
+                    "name": "ipconfig1",
+                    "properties": {
+                        "privateIPAllocationMethod": "Static",
+                        "privateIPAddress": "[parameters('fwVmAddress1')]",
+                        "publicIPAddress": {
+                            "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
+                        },
+                        "subnet": {
+                            "id": "[variables('subNetID')]"
+                        }
+                    }
+                }
+            ],
+            "enableIPForwarding": true
+            }
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nicName'), '-ha')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetName'))]",
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'), '-ha')]"
+            ],
+            "properties": {
+            "ipConfigurations": [
+                {
+                    "name": "ipconfig1-ha",
+                    "properties": {
+                        "privateIPAllocationMethod": "Static",
+                        "privateIPAddress": "[parameters('fwVmAddress1')]",
+                        "publicIPAddress": {
+                            "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('publicIPAddressName'), '-ha'))]"
+                        },
+                        "subnet": {
+                            "id": "[variables('subNetID')]"
+                        }
+                    }
+                }
+            ],
+            "enableIPForwarding": true
+            }
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('vmName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                    "computername": "[parameters('vmName')]",
+                    "adminUsername": "azureuser",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"flags\" : [\"primary\"], \"ip\" : \"', parameters('fwVmAddress1'), '\", \"haip\" : \"', parameters('fwVmAddress2'), '\", \"subnet\" : \"', parameters('subNetPrefix'), '\", \"gateway\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('adminPassword'), '\" }}'))]"
+                },
+                "storageProfile": {
+                    "osDisk" : {
+                        "name" : "[concat(parameters('vmName'), '-osDisk')]",
+                        "osType" : "[parameters('osType')]",
+                        "caching" : "ReadWrite",
+                        "createOption" : "FromImage",
+                        "image" : {
+                            "uri" : "[parameters('userImageVhdUri')]"
+                        },
+                        "vhd" : {
+                            "uri" : "[variables('osDiskVhdName')]"
+                        }
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces" : [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(parameters('vmName'), '-ha')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), '-ha')]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                    "computername": "[concat(parameters('vmName'), '-ha')]",
+                    "adminUsername": "azureuser",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"haip\" : \"', parameters('fwVmAddress2'), '\", \"subnet\" : \"', parameters('subNetPrefix'), '\", \"gateway\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('adminPassword'), '\" }}'))]"
+                },
+                "storageProfile": {
+                    "osDisk" : {
+                        "name" : "[concat(parameters('vmName'), '-ha-osDisk')]",
+                        "osType" : "[parameters('osType')]",
+                        "caching" : "ReadWrite",
+                        "createOption" : "FromImage",
+                        "image" : {
+                            "uri" : "[parameters('userImageVhdUri')]"
+                        },
+                        "vhd" : {
+                            "uri" : "[concat(variables('osDiskVhdName'), '-ha')]"
+                        }
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces" : [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicName'), '-ha'))]"
+                        }
+                    ]
+                }
+            }
         }
-      }
-    },
-    {
-      "apiVersion": "[variables( 'apiVersion' )]",
-      "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat( parameters('fwVmName'), '-HA' )]",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[resourceId( 'Microsoft.Network/networkInterfaces', concat( variables( 'nicName' ), 'HA'))]"
-      ],
-      "properties": {
-        "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets',parameters('haSetName'))]"
-        },
-        "hardwareProfile": {
-          "vmSize": "[parameters('fwVmSize')]"
-        },
-        "osProfile": {
-          "computerName": "[concat(parameters('fwVmName'),'-HA')]",
-          "adminUsername": "[variables('adminUsername')]",
-          "adminPassword": "[parameters('fwVmRootPasswd')]",
-          "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"haip\" : \"', parameters('fwVmAddress2'), '\", \"subnet\" : \"', parameters('fwSubnetAddress'), '\", \"gateway\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('fwVmRootPasswd'), '\" }}'))]"
-        },
-        "storageProfile": {
-          "osDisk": {
-            "name": "[concat(parameters('fwVmName'),'-osDisk')]",
-            "caching": "ReadWrite",
-            "createOption": "FromImage",
-            "image" : {
-                "uri" : "[parameters('imageUri')]"
-            },
-            "vhd": {
-              "uri": "[concat('https://',parameters('vmStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',parameters('fwVmName'),'ha','.vhd')]"
-            }
-          }
-        },
-        "diagnosticsProfile": {
-          "bootDiagnostics": {
-            "enabled": false
-          }
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nicName'),'ha'))]"
-            }
-          ]
-        }
-      }
-    }
-  ],
-  "outputs": {
-  }
+    ]
 }
