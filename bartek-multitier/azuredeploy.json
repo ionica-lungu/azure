@@ -833,6 +833,12 @@
                         }
                     }
                 },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri" : "[concat('http://', parameters('storageAccountName'), '.blob.core.windows.net')]"
+                    }
+                },
                 "networkProfile": {
                     "networkInterfaces" : [
                         {
@@ -872,6 +878,12 @@
                         "vhd" : {
                             "uri" : "[concat(variables('osDiskVhdName'), '-ha.vhd')]"
                         }
+                    }
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri" : "[concat('http://', parameters('storageAccountName'), '.blob.core.windows.net')]"
                     }
                 },
                 "networkProfile": {
