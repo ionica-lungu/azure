@@ -103,6 +103,7 @@
         },
         "sizeOfDataDisksInGB" : {
             "type" : "int",
+            "maxValue" : 32767,
             "defaultValue" : 10,
             "metadata" : {
                 "description" : "Size of data disks (in GB)"
