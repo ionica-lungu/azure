@@ -773,7 +773,8 @@
                         },
                         "subnet": {
                             "id": "[variables('subNet1ID')]"
-                        }
+                        },
+						"primary": true
                     }
                 }
             ]
