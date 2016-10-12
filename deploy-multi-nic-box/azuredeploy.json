@@ -111,7 +111,8 @@
         "vnetID" : "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetName'))]",
         "virtualNetPrefixParts" : "[split(parameters('virtualNetPrefix', '/'))]",
         "virtualNetPrefixAddr" : "[variables('virtualNetPrefixParts')[0]]",
-        "subnetCommonPrefix" : "[concat(take(split(variables('virtualNetPrefixAddr', '.')), 2))]",
+        "subnetCommonPrefixParts" : "[split(variables('virtualNetPrefixAddr', '.'))]",
+        "subnetCommonPrefix" : "[concat(variables('subnetCommonPrefixParts')[0], '.', variables('subnetCommonPrefixParts')[1], '.')]",
         "subnetsArray" : [
             {
                 "name": "[concat(parameters('virtualNetName'), '-subnet-0']",
