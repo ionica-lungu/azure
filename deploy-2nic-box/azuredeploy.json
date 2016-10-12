@@ -773,8 +773,7 @@
                         },
                         "subnet": {
                             "id": "[variables('subNet1ID')]"
-                        },
-                        "primary": true
+                        }
                     }
                 }
             ]
@@ -845,10 +844,11 @@
                     "networkInterfaces" : [
                         {
                             "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic1Name'))]",
-							"primary" : true
+							"properties" : { "primary" : true }
                         },
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic2Name'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic2Name'))]",
+							"properties" : { "primary" : false }
                         }
                     ]
                 }
