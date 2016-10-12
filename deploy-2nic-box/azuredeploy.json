@@ -762,6 +762,7 @@
                 "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetName'))]",
                 "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
             ],
+            "primary": true,
             "properties": {
             "ipConfigurations": [
                 {
@@ -774,10 +775,11 @@
                         "subnet": {
                             "id": "[variables('subNet1ID')]"
                         },
-						"primary": true
+                        "primary": true
                     }
                 }
-            ]
+            ],
+            "primary": true
             }
         },
         {
