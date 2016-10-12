@@ -762,7 +762,6 @@
                 "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetName'))]",
                 "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
             ],
-            "primary": true,
             "properties": {
             "ipConfigurations": [
                 {
@@ -778,8 +777,7 @@
                         "primary": true
                     }
                 }
-            ],
-            "primary": true
+            ]
             }
         },
         {
@@ -846,7 +844,8 @@
                 "networkProfile": {
                     "networkInterfaces" : [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic1Name'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic1Name'))]",
+							"primary" : true
                         },
                         {
                             "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic2Name'))]"
