@@ -1,0 +1,7 @@
+{
+	"itemDisplayName": "Deploys a 2 nic (same vnet, different subnets) NGF box",
+	"description": "Deploys a 2 nic (same vnet, different subnets) NGF box",
+	"summary": "Deploys a 2 nic (same vnet, different subnets) NGF box",
+	"githubUsername": "ionica-lungu",
+	"dateUpdated": "2016-09-14"
+}
