@@ -166,35 +166,35 @@
         "nicNamePrefix": "[concat(parameters('vmName'), '-networkInterface')]",
         "networkInterfacesArray" : [
             {
-                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix', '-', '0')))]",
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix'), '-', '0'))]",
                 "properties" : { "primary" : true }
             },
             {
-                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix', '-', '1')))]",
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix'), '-', '1'))]",
                 "properties" : { "primary" : false }
             },
             {
-                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix', '-', '2')))]",
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix'), '-', '2'))]",
                 "properties" : { "primary" : false }
             },
             {
-                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix', '-', '3')))]",
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix'), '-', '3'))]",
                 "properties" : { "primary" : false }
             },
             {
-                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix', '-', '4')))]",
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix'), '-', '4'))]",
                 "properties" : { "primary" : false }
             },
             {
-                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix', '-', '5')))]",
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix'), '-', '5'))]",
                 "properties" : { "primary" : false }
             },
             {
-                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix', '-', '6')))]",
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix'), '-', '6'))]",
                 "properties" : { "primary" : false }
             },
             {
-                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix', '-', '7')))]",
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNamePrefix'), '-', '7'))]",
                 "properties" : { "primary" : false }
             }
         ],
