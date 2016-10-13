@@ -115,49 +115,49 @@
         "subnetCommonPrefix" : "[concat(variables('subnetCommonPrefixParts')[0], '.', variables('subnetCommonPrefixParts')[1], '.')]",
         "subnetsArray" : [
             {
-                "name": "[concat(parameters('virtualNetName'), '-subnet-0']",
+                "name": "[concat(parameters('virtualNetName'), '-subnet-0')]",
                     "properties" : {
                         "addressPrefix": "[concat(variables('subnetCommonPrefix'), '0', '.0/24')]"
                     }
             },
             {
-                "name": "[concat(parameters('virtualNetName'), '-subnet-1']",
+                "name": "[concat(parameters('virtualNetName'), '-subnet-1')]",
                     "properties" : {
                         "addressPrefix": "[concat(variables('subnetCommonPrefix'), '1', '.0/24')]"
                     }
             },
             {
-                "name": "[concat(parameters('virtualNetName'), '-subnet-2']",
+                "name": "[concat(parameters('virtualNetName'), '-subnet-2')]",
                     "properties" : {
                         "addressPrefix": "[concat(variables('subnetCommonPrefix'), '2', '.0/24')]"
                     }
             },
             {
-                "name": "[concat(parameters('virtualNetName'), '-subnet-3']",
+                "name": "[concat(parameters('virtualNetName'), '-subnet-3')]",
                     "properties" : {
                         "addressPrefix": "[concat(variables('subnetCommonPrefix'), '3', '.0/24')]"
                     }
             },
             {
-                "name": "[concat(parameters('virtualNetName'), '-subnet-4']",
+                "name": "[concat(parameters('virtualNetName'), '-subnet-4')]",
                     "properties" : {
                         "addressPrefix": "[concat(variables('subnetCommonPrefix'), '4', '.0/24')]"
                     }
             },
             {
-                "name": "[concat(parameters('virtualNetName'), '-subnet-5']",
+                "name": "[concat(parameters('virtualNetName'), '-subnet-5')]",
                     "properties" : {
                         "addressPrefix": "[concat(variables('subnetCommonPrefix'), '5', '.0/24')]"
                     }
             },
             {
-                "name": "[concat(parameters('virtualNetName'), '-subnet-6']",
+                "name": "[concat(parameters('virtualNetName'), '-subnet-6')]",
                     "properties" : {
                         "addressPrefix": "[concat(variables('subnetCommonPrefix'), '6', '.0/24')]"
                     }
             },
             {
-                "name": "[concat(parameters('virtualNetName'), '-subnet-7']",
+                "name": "[concat(parameters('virtualNetName'), '-subnet-7')]",
                     "properties" : {
                         "addressPrefix": "[concat(variables('subnetCommonPrefix'), '7', '.0/24')]"
                     }
