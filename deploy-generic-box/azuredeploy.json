@@ -72,6 +72,7 @@
 			"type": "string",
 			"metadata": {
 				"description": "OpenSsh publik key file for the admin account."
+			}
 		},
         "location": {
             "type": "string",
