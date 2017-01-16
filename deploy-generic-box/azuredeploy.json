@@ -68,12 +68,12 @@
                 "description": "Password for the Virtual Machine."
             }
         },
-		"adminSshPubKey": {
-			"type": "string",
-			"metadata": {
-				"description": "OpenSsh publik key file for the admin account."
-			}
-		},
+        "adminSshPubKey": {
+            "type": "string",
+            "metadata": {
+                "description": "OpenSsh public key file for the admin account."
+            }
+        },
         "location": {
             "type": "string",
             "defaultValue": "West Europe",
@@ -779,20 +779,20 @@
                     "computername": "[parameters('vmName')]",
                     "adminUsername": "azureuser",
                     "adminPassword": "[parameters('adminPassword')]",
-					"linuxConfiguration": {
-						"ssh": {
-							"publicKeys": [
-								{
-									"path": "/root/.ssh/authorized_keys",
-									"keyData": "[parameters('adminSshPubKey')]"
-								},
-								{
-									"path": "/root/.ssh/authorized_keys2",
-									"keyData": "[parameters('adminSshPubKey')]"
-								}
-							]
-						}
-					}
+                    "linuxConfiguration": {
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "/root/.ssh/authorized_keys",
+                                    "keyData": "[parameters('adminSshPubKey')]"
+                                },
+                                {
+                                    "path": "/root/.ssh/authorized_keys2",
+                                    "keyData": "[parameters('adminSshPubKey')]"
+                                }
+                            ]
+                        }
+                    }
                 },
                 "storageProfile": {
                     "osDisk": {
