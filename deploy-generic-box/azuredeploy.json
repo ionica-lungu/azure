@@ -273,9 +273,8 @@
         "osProfilePublicKey": {
             "computername": "[parameters('vmName')]",
             "adminUsername": "azureuser",
-			"adminPassword": "",
             "linuxConfiguration": {
-                "disablePasswordAuthentication": "false",
+                "disablePasswordAuthentication": "true",
                 "ssh": {
                     "publicKeys": [
                         {
