@@ -64,10 +64,10 @@
         },
         "authenticationType": {
             "type": "string",
-            "defaultValue": "password",
+            "defaultValue": "Password",
             "allowedValues": [
-                "password",
-                "public_key"
+                "Password",
+                "PublicKey"
             ],
             "metadata": {
                 "description": "Authentication type."
@@ -265,13 +265,12 @@
         "nicName": "[concat(parameters('vmName'), '-networkInterface')]",
         "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetName'))]",
         "subNetID": "[concat(variables('vnetID'), '/subnets/', parameters('subNetName'))]",
-        "osProfile": "[variables(concat('osProfile_', parameters('authenticationType')))]",
-        "osProfile_password": {
+        "osProfilePassword": {
             "computername": "[parameters('vmName')]",
             "adminUsername": "azureuser",
             "adminPassword": "[parameters('adminPassword')]"
         },
-        "osProfile_public_key": {
+        "osProfilePublicKey": {
             "computername": "[parameters('vmName')]",
             "adminUsername": "azureuser",
             "linuxConfiguration": {
@@ -286,6 +285,7 @@
                 }
             }
         },
+        "osProfile": "[variables(concat('osProfile', parameters('authenticationType')))]",
         "storageContainerUri": "[concat('http://', parameters('storageAccountName'), '.blob.core.windows.net/', parameters('storageContainerName'))]",
         "osDiskVhdName": "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-osDisk.vhd')]",
         "dataDisksArray": [
