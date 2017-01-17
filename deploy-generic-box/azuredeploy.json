@@ -64,12 +64,14 @@
         },
         "adminPassword": {
             "type": "securestring",
+            "defaultValue": "",
             "metadata": {
                 "description": "Password for the Virtual Machine."
             }
         },
         "adminSshPubKey": {
             "type": "string",
+            "defaultValue": "",
             "metadata": {
                 "description": "OpenSsh public key for the admin account (as string)."
             }
