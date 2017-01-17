@@ -62,6 +62,17 @@
                 "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
             }
         },
+        "authenticationType": {
+            "type": "string",
+            "defaultValue": "password",
+            "allowedValues": [
+                "password",
+                "public_key"
+            ],
+            "metadata": {
+                "description": "Authentication type."
+            }
+        },
         "adminPassword": {
             "type": "securestring",
             "defaultValue": "",
@@ -79,6 +90,46 @@
         "location": {
             "type": "string",
             "defaultValue": "West Europe",
+            "allowedValues": [
+                "North Europe",
+                "West Europe",
+                "Germany Central",
+                "Germany Northeast",
+                "UK West",
+                "UK South",
+                "France Central",
+                "France South",
+                "East US",
+                "East US 2",
+                "Central US",
+                "North Central US",
+                "South Central US",
+                "West Central US",
+                "West US",
+                "West US 2",
+                "US Gov Virginia",
+                "US Gov Iowa",
+                "Canada East",
+                "Canada Central",
+                "Brazil South",
+                "US DoD East",
+                "US DoD Central",
+                "US Gov Arizona",
+                "US Gov Texas",
+                "Southeast Asia",
+                "East Asia",
+                "Australia East",
+                "Australia Southeast",
+                "Central India",
+                "West India",
+                "South India",
+                "Japan East",
+                "Japan West",
+                "China East",
+                "China North",
+                "Korea Central",
+                "Korea South"
+            ],
             "metadata": {
                 "description": "Location of the virtual machine."
             }
@@ -86,6 +137,96 @@
         "vmSize": {
             "type": "string",
             "defaultValue": "Standard_A1",
+            "allowedValues": [
+                "Standard_A0",
+                "Standard_A1",
+                "Standard_A2",
+                "Standard_A3",
+                "Standard_A4",
+                "Standard_A5",
+                "Standard_A6",
+                "Standard_A7",
+                "Standard_A8",
+                "Standard_A9",
+                "Standard_A10",
+                "Standard_A11",
+                "Standard_A1_v2",
+                "Standard_A2_v2",
+                "Standard_A4_v2",
+                "Standard_A8_v2",
+                "Standard_A2m_v2",
+                "Standard_A4m_v2",
+                "Standard_A8m_v2",
+                "Standard_D1",
+                "Standard_D2",
+                "Standard_D3",
+                "Standard_D4",
+                "Standard_D11",
+                "Standard_D12",
+                "Standard_D13",
+                "Standard_D14",
+                "Standard_D1_v2",
+                "Standard_D2_v2",
+                "Standard_D3_v2",
+                "Standard_D4_v2",
+                "Standard_D5_v2",
+                "Standard_D11_v2",
+                "Standard_D12_v2",
+                "Standard_D13_v2",
+                "Standard_D14_v2",
+                "Standard_D15_v2",
+                "Standard_DS1",
+                "Standard_DS2",
+                "Standard_DS3",
+                "Standard_DS4",
+                "Standard_DS11",
+                "Standard_DS12",
+                "Standard_DS13",
+                "Standard_DS14",
+                "Standard_DS1_v2",
+                "Standard_DS2_v2",
+                "Standard_DS3_v2",
+                "Standard_DS4_v2",
+                "Standard_DS5_v2",
+                "Standard_DS11_v2",
+                "Standard_DS12_v2",
+                "Standard_DS13_v2",
+                "Standard_DS14_v2",
+                "Standard_DS15_v2",
+                "Standard_F1",
+                "Standard_F2",
+                "Standard_F4",
+                "Standard_F8",
+                "Standard_F16",
+                "Standard_F1s",
+                "Standard_F2s",
+                "Standard_F4s",
+                "Standard_F8s",
+                "Standard_F16s",
+                "Standard_G1",
+                "Standard_G2",
+                "Standard_G3",
+                "Standard_G4",
+                "Standard_G5",
+                "Standard_GS1",
+                "Standard_GS2",
+                "Standard_GS3",
+                "Standard_GS4",
+                "Standard_GS5",
+                "Standard_H8",
+                "Standard_H16",
+                "Standard_H8m",
+                "Standard_H16m",
+                "Standard_H16r",
+                "Standard_H16mr",
+                "Standard_NV6",
+                "Standard_NV12",
+                "Standard_NV24",
+                "Standard_NC6",
+                "Standard_NC12",
+                "Standard_NC24",
+                "Standard_NC24r"
+            ],
             "metadata": {
                 "description": "Virtual machine size."
             }
@@ -124,6 +265,27 @@
         "nicName": "[concat(parameters('vmName'), '-networkInterface')]",
         "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetName'))]",
         "subNetID": "[concat(variables('vnetID'), '/subnets/', parameters('subNetName'))]",
+        "osProfile": "[variables(concat('osProfile_', parameters('authenticationType')))]",
+        "osProfile_password": {
+            "computername": "[parameters('vmName')]",
+            "adminUsername": "azureuser",
+            "adminPassword": "[parameters('adminPassword')]"
+        },
+        "osProfile_public_key": {
+            "computername": "[parameters('vmName')]",
+            "adminUsername": "azureuser",
+            "linuxConfiguration": {
+                "disablePasswordAuthentication": "false",
+                "ssh": {
+                    "publicKeys": [
+                        {
+                            "path": "/home/azureuser/.ssh/authorized_keys",
+                            "keyData": "[parameters('adminSshPubKey')]"
+                        }
+                    ]
+                }
+            }
+        },
         "storageContainerUri": "[concat('http://', parameters('storageAccountName'), '.blob.core.windows.net/', parameters('storageContainerName'))]",
         "osDiskVhdName": "[concat(variables('storageContainerUri'), '/', parameters('vmName'), '-osDisk.vhd')]",
         "dataDisksArray": [
@@ -777,22 +939,7 @@
                 "hardwareProfile": {
                     "vmSize": "[parameters('vmSize')]"
                 },
-                "osProfile": {
-                    "computername": "[parameters('vmName')]",
-                    "adminUsername": "azureuser",
-                    "adminPassword": "[parameters('adminPassword')]",
-                    "linuxConfiguration": {
-                        "disablePasswordAuthentication": "false",
-                        "ssh": {
-                            "publicKeys": [
-                                {
-                                    "path": "/home/azureuser/.ssh/authorized_keys",
-                                    "keyData": "[parameters('adminSshPubKey')]"
-                                }
-                            ]
-                        }
-                    }
-                },
+                "osProfile": "[variables('osProfile')]",
                 "storageProfile": {
                     "osDisk": {
                         "name": "[concat(parameters('vmName'), '-osDisk')]",
